@@ -135,33 +135,31 @@ open outputs/plotly_income_by_education_gender.html
 
 ## 7. 개선 사항
 
-### 우선 적용할 개선
-
-1. **중복 폰트 호출 제거**  
-   현재 `create_seaborn_chart()`에서 `set_korean_font()`가 두 번 호출된다. `sns.set_theme()`가 폰트 설정을 초기화할 수 있으므로 첫 번째 호출은 제거하고 아래 순서만 유지하는 것이 좋다.
-
-   ```python
-   sns.set_theme(style="whitegrid")
-   set_korean_font()
-   ```
-
-2. **소득 값 검증 강화**  
-   현재 `>50K`가 아닌 모든 값을 `<=50K`로 처리한다. 예상하지 못한 값도 저소득으로 분류될 수 있으므로 허용값을 확인하는 검증 코드를 추가하는 것이 안전하다.
-
-   ```python
-   valid_income = {"<=50K", ">50K"}
-   unknown_income = set(df["income"].dropna().unique()) - valid_income
-   if unknown_income:
-       raise ValueError(f"알 수 없는 소득 값: {unknown_income}")
-   ```
-
-3. **결측값 제거 영향 기록**  
-   현재 하나의 값이라도 누락된 행을 모두 제거한다. 제거 전후 행 수와 컬럼별 결측 수를 출력하고, 필요하면 범주형 변수에 `Unknown`을 적용하는 방식도 비교할 필요가 있다. 결측 제거가 특정 집단을 더 많이 제외하면 결과에 편향이 생길 수 있다.
-
-4. **불확실성 표현 추가**  
-   그룹별 고소득 비율에 95% 신뢰구간을 추가하면 막대 높이 차이가 표본 오차 범위보다 큰지 판단하기 쉽다. 표본 수가 너무 적은 그룹에는 별도 표시를 하거나 최소 표본 기준을 설정하는 방법도 고려할 수 있다.
-
 ### 추가 개선 아이디어
+
+- **중복 폰트 호출 제거**
+  현재 `create_seaborn_chart()`에서 `set_korean_font()`가 두 번 호출된다. `sns.set_theme()`가 폰트 설정을 초기화할 수 있으므로 첫 번째 호출은 제거하고 아래 순서만 유지하는 것이 좋다.
+
+  ```python
+  sns.set_theme(style="whitegrid")
+  set_korean_font()
+  ```
+
+- **소득 값 검증 강화**
+  현재 `>50K`가 아닌 모든 값을 `<=50K`로 처리한다. 예상하지 못한 값도 저소득으로 분류될 수 있으므로 허용값을 확인하는 검증 코드를 추가하는 것이 안전하다.
+
+  ```python
+  valid_income = {"<=50K", ">50K"}
+  unknown_income = set(df["income"].dropna().unique()) - valid_income
+  if unknown_income:
+      raise ValueError(f"알 수 없는 소득 값: {unknown_income}")
+  ```
+
+- **결측값 제거 영향 기록**
+  현재 하나의 값이라도 누락된 행을 모두 제거한다. 제거 전후 행 수와 컬럼별 결측 수를 출력하고, 필요하면 범주형 변수에 `Unknown`을 적용하는 방식도 비교할 필요가 있다. 결측 제거가 특정 집단을 더 많이 제외하면 결과에 편향이 생길 수 있다.
+
+- **불확실성 표현 추가**
+  그룹별 고소득 비율에 95% 신뢰구간을 추가하면 막대 높이 차이가 표본 오차 범위보다 큰지 판단하기 쉽다. 표본 수가 너무 적은 그룹에는 별도 표시를 하거나 최소 표본 기준을 설정하는 방법도 고려할 수 있다.
 
 - Seaborn 차트에 집단별 평균선과 표본 수를 표시하면 결과 해석이 더 쉬워진다.
 - 파일 경로, 차트 제목, 출력 형식을 명령행 인자로 받으면 다른 데이터에도 재사용하기 쉽다.
