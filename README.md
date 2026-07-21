@@ -46,10 +46,11 @@ skala-data-anlaysis/
 ├── figure-kjh/                          # 통계 검정 시각화 (kjh)
 ├── models-kjh/                          # knn·logistic·xgb 모델 (kjh)
 │
-├── HANDOFF-jhg.md                       # 팀원별 정리 문서 (3장 참고)
-├── stats_report-kjh.md
-├── visual-chart-hk.md
-└── report-kdi.md
+└── doc/                                 # 팀원별 정리 문서 (3장 참고)
+    ├── HANDOFF-jhg.md
+    ├── stats_report-kjh.md
+    ├── visual-chart-hk.md
+    └── report-kdi.md
 ```
 
 ---
@@ -82,10 +83,10 @@ skala-data-anlaysis/
 
 | 담당 | 파트 | 주요 코드 | 정리 문서 |
 |---|---|---|---|
-| **정한결(jhg)** | 데이터 준비 (로딩 비교·정제·EDA) | `main-jhg.py`, `src/` | [HANDOFF-jhg.md](HANDOFF-jhg.md) |
-| **김재현(kjh)** | 통계 검정 · ML 모델 비교 | `stats-kjh.py` | [stats_report-kjh.md](stats_report-kjh.md) |
-| **조현강(HK)** | 시각화 (Seaborn·Plotly·Cramér's V) | `HK.py` | [visual-chart-hk.md](visual-chart-hk.md) |
-| **길다인(kdi)** | 리포트 자동화 · 데이터 입력 통합 | `report-kdi.py`, `test.py` | [report-kdi.md](report-kdi.md) |
+| **정한결(jhg)** | 데이터 준비 (로딩 비교·정제·EDA) | `main-jhg.py`, `src/` | [doc/HANDOFF-jhg.md](doc/HANDOFF-jhg.md) |
+| **김재현(kjh)** | 통계 검정 · ML 모델 비교 | `stats-kjh.py` | [doc/stats_report-kjh.md](doc/stats_report-kjh.md) |
+| **조현강(HK)** | 시각화 (Seaborn·Plotly·Cramér's V) | `HK.py` | [doc/visual-chart-hk.md](doc/visual-chart-hk.md) |
+| **길다인(kdi)** | 리포트 자동화 · 데이터 입력 통합 | `report-kdi.py`, `test.py` | [doc/report-kdi.md](doc/report-kdi.md) |
 
 ---
 
