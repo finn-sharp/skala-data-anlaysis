@@ -81,7 +81,7 @@ except ImportError as e:  # noqa: BLE001 - 시작 전 의존성 확인
 # 모든 경로는 '실행 위치'가 아니라 '이 파일의 위치'를 기준으로 해석한다.
 # 어느 디렉터리에서 실행하든 데이터·산출물·템플릿을 안정적으로 찾기 위함이다.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = os.path.join(BASE_DIR, "data", "adult.data")
+DATA_PATH = os.path.join(BASE_DIR, "data", "adult.csv")
 OUT_DIR = os.path.join(BASE_DIR, "outputs")
 TEMPLATE_PATH = os.path.join(BASE_DIR, "report_template.j2")
 
@@ -169,7 +169,7 @@ def load_data(csv_path: str) -> pd.DataFrame:
     if not os.path.isfile(csv_path):
         raise DataError(f"데이터 파일을 찾을 수 없음: {csv_path}")
 
-    df = pd.read_csv(csv_path, header=None, names=COLUMNS,
+    df = pd.read_csv(csv_path, header=0, names=COLUMNS,
                      skipinitialspace=True, na_values=RAW_NA)
     if df.empty:
         raise DataError("적재 결과가 비어 있음(0행)")
