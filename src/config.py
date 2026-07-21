@@ -11,6 +11,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, "data", "adult.csv")
 OUT_DIR = os.path.join(BASE_DIR, "outputs")
+OUT_PATH = os.path.join(OUT_DIR, "result_dataload")
 TEMPLATE_PATH = os.path.join(BASE_DIR, "report_template.j2")
 
 # 로딩 속도 벤치마크 전용 대용량 파일 — 원본(32,561행)만으로는 Pandas·Polars 로딩

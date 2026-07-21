@@ -14,7 +14,7 @@ import json
 import os
 import sys
 
-from src.config import BENCHMARK_DATA_PATH, BENCHMARK_MULTIPLIER, DATA_PATH, OUT_DIR
+from src.config import BENCHMARK_DATA_PATH, BENCHMARK_MULTIPLIER, DATA_PATH, OUT_PATH
 from src.data import clean_data, clean_data_polars, run_eda
 from src.exceptions import DataError
 from src.compare import benchmark_loaders, build_benchmark_file, compare_loaders
@@ -23,7 +23,7 @@ from src.utils import section
 
 def main() -> None:
     """[1] 적재+로더 비교+속도 벤치마크 → [2] 정제(결측·중복) → 기본 EDA 를 순서대로 실행한다."""
-    os.makedirs(OUT_DIR, exist_ok=True)
+    os.makedirs(OUT_PATH, exist_ok=True)
 
     # ---- [1] Pandas vs Polars 로딩 결과 비교 -------------------------------
     section("[1] 데이터 적재 — Pandas vs Polars 비교")
@@ -43,9 +43,9 @@ def main() -> None:
     print("* 컬럼별 결측 개수 (Pandas):", loader_report["missing_by_col_pandas"])
     print("* 컬럼별 결측 개수 (Polars):", loader_report["missing_by_col_polars"])
 
-    with open(os.path.join(OUT_DIR, "loader_comparison.json"), "w", encoding="utf-8") as f:
+    with open(os.path.join(OUT_PATH, "loader_comparison.json"), "w", encoding="utf-8") as f:
         json.dump(loader_report, f, ensure_ascii=False, indent=2)
-    print(f"* 저장: {os.path.join(OUT_DIR, 'loader_comparison.json')}")
+    print(f"* 저장: {os.path.join(OUT_PATH, 'loader_comparison.json')}")
 
     # ---- [1-B] 로딩 속도 벤치마크 (원본 N배 복제 파일, 속도 비교 전용) --------
     section("[1-B] 로딩 속도 벤치마크 (원본 x{}, 속도 비교 전용)".format(BENCHMARK_MULTIPLIER))
@@ -61,9 +61,9 @@ def main() -> None:
     print(f"  Polars 개별: {benchmark_report['polars_times_sec']}")
     print(f"  {benchmark_report['msg']}")
 
-    with open(os.path.join(OUT_DIR, "benchmark.json"), "w", encoding="utf-8") as f:
+    with open(os.path.join(OUT_PATH, "benchmark.json"), "w", encoding="utf-8") as f:
         json.dump(benchmark_report, f, ensure_ascii=False, indent=2)
-    print(f"* 저장: {os.path.join(OUT_DIR, 'benchmark.json')}")
+    print(f"* 저장: {os.path.join(OUT_PATH, 'benchmark.json')}")
 
     # ---- [2] 결측치·중복 처리 (Pandas 기준 + Polars 교차 검증) --------------
     section("[2] 결측치·중복 처리")
@@ -94,11 +94,11 @@ def main() -> None:
           eda_report["categorical_top_values"]["education"])
     print("* 타깃(income) 분포:", eda_report["target_distribution"])
 
-    with open(os.path.join(OUT_DIR, "eda_summary.json"), "w", encoding="utf-8") as f:
+    with open(os.path.join(OUT_PATH, "eda_summary.json"), "w", encoding="utf-8") as f:
         json.dump(eda_report, f, ensure_ascii=False, indent=2)
-    print(f"* 저장: {os.path.join(OUT_DIR, 'eda_summary.json')}")
+    print(f"* 저장: {os.path.join(OUT_PATH, 'eda_summary.json')}")
 
-    clean_csv = os.path.join(OUT_DIR, "adult_clean.csv")
+    clean_csv = os.path.join(OUT_PATH, "adult_clean.csv")
     df_clean.to_csv(clean_csv, index=False)
     print(f"* 저장(정제 데이터, 다음 단계 공용 입력): {clean_csv}")
 

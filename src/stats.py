@@ -4,14 +4,19 @@
     2026-07-21  길다인  파이프라인 초기 구축
                          - 반복문(for) 기반 다중 컬럼 통계 검정 및 조합별 개별 시각화(PNG) 저장 기능 추가
 """
-
+from dotenv import load_dotenv
 import os
+from pathlib import Path
 import pathlib
-BASE_DIR = pathlib.Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / "data"
-DATA_PATH = DATA_DIR / "adult.csv"
-FIGURE_DIR = pathlib.Path("figure-kjh")
-FIGURE_DIR.mkdir(parents=True, exist_ok=True)
+
+load_dotenv(".env.stats")
+
+BASE_DIR = BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / os.getenv("DATA_DIR", "data")
+DATA_PATH = DATA_DIR / os.getenv("DATA_FILE", "adult.csv")
+CDA_FIGURE_DIR = BASE_DIR / os.getenv("CDA_FIGURE_DIR", "figure")
+CDA_FIGURE_DIR.mkdir(parents=True, exist_ok=True)
+MODEL_DIR = BASE_DIR / os.getenv("MODEL_DIR", "model")
 
 import numpy as np
 import pandas as pd
@@ -105,7 +110,7 @@ def plot_ttest_result(result: dict, save_name: str, alpha: float = 0.05):
     ax.grid(alpha=0.3)
 
     plt.tight_layout()
-    plt.savefig(FIGURE_DIR / f"ttest_{save_name}.png", dpi=300)
+    plt.savefig(CDA_FIGURE_DIR / f"ttest_{save_name}.png", dpi=300)
     plt.close()
 
 
@@ -129,7 +134,7 @@ def plot_chi2_result(result: dict, save_name: str, alpha: float = 0.05):
     ax.grid(alpha=0.3)
 
     plt.tight_layout()
-    plt.savefig(FIGURE_DIR / f"chi2_{save_name}.png", dpi=300)
+    plt.savefig(CDA_FIGURE_DIR / f"chi2_{save_name}.png", dpi=300)
     plt.close()
 
 
@@ -154,7 +159,7 @@ def plot_anova_result(result: dict, save_name: str, alpha: float = 0.05):
     ax.grid(alpha=0.3)
 
     plt.tight_layout()
-    plt.savefig(FIGURE_DIR / f"anova_{save_name}.png", dpi=300)
+    plt.savefig(CDA_FIGURE_DIR / f"anova_{save_name}.png", dpi=300)
     plt.close()
 
 
@@ -343,7 +348,7 @@ def main():
         print(f"      · 대립가설(H₁): 두 집단 간 {combo['value_col']} 평균은 차이가 있다.")
         print(f"      · 통계량(t): {res['t']:.3f} | P-value: {res['p']:.4e}")
         print(f"      · 판정 결과: {res['msg']}")
-        print(f"      · [저장완료] figure-kjh/ttest_{save_name}.png\n")
+        print(f"      · [저장완료] output/figure_cda/ttest_{save_name}.png\n")
 
     # 2-2. Chi-Square Test 조합 리스트
     chi2_combinations = [
@@ -365,7 +370,7 @@ def main():
         print(f"      · 대립가설(H₁): {combo['col1']}과(와) {combo['col2']}은(는) 독립이 아니다 (연관성 있음).")
         print(f"      · 통계량(χ²): {res['chi2']:.3f} (자유도: {res['dof']}) | P-value: {res['p']:.4e}")
         print(f"      · 판정 결과: {res['msg']}")
-        print(f"      · [저장완료] figure-kjh/chi2_{save_name}.png\n")
+        print(f"      · [저장완료] output/figure_cda//chi2_{save_name}.png\n")
 
     # 2-3. One-way ANOVA 조합 리스트
     anova_combinations = [
@@ -386,7 +391,7 @@ def main():
         print(f"      · 대립가설(H₁): 적어도 하나의 그룹은 {combo['value_col']} 평균이 다르다.")
         print(f"      · 통계량(F): {res['f']:.3f} (그룹 수: {res['k_groups']}개) | P-value: {res['p']:.4e}")
         print(f"      · 판정 결과: {res['msg']}")
-        print(f"      · [저장완료] figure-kjh/anova_{save_name}.png\n")
+        print(f"      · [저장완료] output/figure_cda/anova_{save_name}.png\n")
 
     print("-" * 50)
 
@@ -402,7 +407,7 @@ def main():
         num_features=num_features, 
         cat_features=cat_features, 
         target=target, 
-        save_dir="./models"
+        save_dir=MODEL_DIR
     )
 
     print("\n=== [최종] 모델 성능 비교 결과 요약 ===")
