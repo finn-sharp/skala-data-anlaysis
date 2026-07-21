@@ -9,7 +9,7 @@ BASE_DIR은 프로젝트 루트(skala-data-final/)를 가리키도록 한 단계
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_PATH = os.path.join(BASE_DIR, "data", "adult.data")
+DATA_PATH = os.path.join(BASE_DIR, "data", "adult.csv")
 OUT_DIR = os.path.join(BASE_DIR, "outputs")
 TEMPLATE_PATH = os.path.join(BASE_DIR, "report_template.j2")
 

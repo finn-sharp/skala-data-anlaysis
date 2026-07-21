@@ -52,7 +52,7 @@ def load_data_pandas(csv_path: str) -> pd.DataFrame:
     if not os.path.isfile(csv_path):
         raise DataError(f"데이터 파일을 찾을 수 없음: {csv_path}")
 
-    df = pd.read_csv(csv_path, header=None, names=COLUMNS,
+    df = pd.read_csv(csv_path, header=0, names=COLUMNS,
                       skipinitialspace=True, na_values=RAW_NA)
     if df.empty:
         raise DataError("적재 결과가 비어 있음(0행)")
@@ -88,7 +88,7 @@ def load_data_polars(csv_path: str) -> pl.DataFrame:
         raise DataError(f"데이터 파일을 찾을 수 없음: {csv_path}")
 
     schema_overrides = {c: pl.Utf8 for c in COLUMNS}
-    df = pl.read_csv(csv_path, has_header=False, new_columns=COLUMNS,
+    df = pl.read_csv(csv_path, has_header=True, new_columns=COLUMNS,
                       schema_overrides=schema_overrides)
 
     # 원본 말미의 빈 줄 등, 전체 컬럼이 null인 행 제거 (Pandas의 skip_blank_lines 기본값과 동치)
