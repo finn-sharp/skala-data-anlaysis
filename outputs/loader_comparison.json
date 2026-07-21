@@ -1,0 +1,60 @@
+{
+  "shape_pandas": [
+    32561,
+    15
+  ],
+  "shape_polars": [
+    32561,
+    15
+  ],
+  "same_shape": true,
+  "load_time_pandas_sec": 0.0242,
+  "load_time_polars_sec": 0.0137,
+  "dtypes_pandas": {
+    "age": "int64",
+    "workclass": "str",
+    "fnlwgt": "int64",
+    "education": "str",
+    "educational-num": "int64",
+    "marital-status": "str",
+    "occupation": "str",
+    "relationship": "str",
+    "race": "str",
+    "gender": "str",
+    "capital-gain": "int64",
+    "capital-loss": "int64",
+    "hours-per-week": "int64",
+    "native-country": "str",
+    "income": "str"
+  },
+  "dtypes_polars": {
+    "age": "Int64",
+    "workclass": "String",
+    "fnlwgt": "Int64",
+    "education": "String",
+    "educational-num": "Int64",
+    "marital-status": "String",
+    "occupation": "String",
+    "relationship": "String",
+    "race": "String",
+    "gender": "String",
+    "capital-gain": "Int64",
+    "capital-loss": "Int64",
+    "hours-per-week": "Int64",
+    "native-country": "String",
+    "income": "String"
+  },
+  "missing_by_col_pandas": {
+    "workclass": 1836,
+    "occupation": 1843,
+    "native-country": 583
+  },
+  "missing_by_col_polars": {
+    "workclass": 1836,
+    "occupation": 1843,
+    "native-country": 583
+  },
+  "same_missing_counts": true,
+  "memory_mb_pandas": 17.57,
+  "memory_mb_polars": 3.95
+}
