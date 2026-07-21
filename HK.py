@@ -16,13 +16,13 @@ from matplotlib import font_manager
 
 # 이 파일과 같은 위치를 기준으로 데이터 및 결과 경로를 설정합니다.
 BASE_DIR = Path(__file__).resolve().parent
-DATA_PATH = BASE_DIR / "data" / "adult.data"
+DATA_PATH = BASE_DIR / "data" / "adult.csv"
 OUTPUT_DIR = BASE_DIR / "outputs"
 
 SEABORN_OUTPUT = OUTPUT_DIR / "seaborn_age_distribution.png"
 PLOTLY_OUTPUT = OUTPUT_DIR / "plotly_income_by_education_gender.html"
 
-# UCI Adult 데이터에는 헤더가 없으므로 열 이름을 직접 지정합니다.
+# adult.csv에 필요한 컬럼이 모두 있는지 검증할 때 사용하는 컬럼 목록입니다.
 COLUMNS = [
     "age",
     "workclass",
@@ -66,13 +66,15 @@ def load_and_clean_data(data_path: Path) -> pd.DataFrame:
     if not data_path.is_file():
         raise FileNotFoundError(f"데이터 파일을 찾을 수 없습니다: {data_path}")
 
-    df = pd.read_csv(
-        data_path,
-        header=None,
-        names=COLUMNS,
-        skipinitialspace=True,
-        na_values="?",
-    )
+    # adult.csv의 첫 번째 행에 있는 컬럼명을 헤더로 읽습니다.
+    df = pd.read_csv(data_path, skipinitialspace=True, na_values="?")
+
+    missing_columns = [column for column in COLUMNS if column not in df.columns]
+    if missing_columns:
+        raise ValueError(f"필수 컬럼이 없습니다: {missing_columns}")
+
+    # 시각화에 필요한 컬럼만 정해진 순서로 사용합니다.
+    df = df[COLUMNS].copy()
 
     # 문자열 앞뒤의 공백과 adult.test에 붙을 수 있는 마침표를 제거합니다.
     text_columns = df.select_dtypes(include="str").columns
