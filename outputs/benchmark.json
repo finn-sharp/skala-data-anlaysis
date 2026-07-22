@@ -1,0 +1,19 @@
+{
+  "n_runs": 3,
+  "rows": 814025,
+  "size_mb": 83.78,
+  "pandas_times_sec": [
+    0.3896,
+    0.3586,
+    0.4291
+  ],
+  "polars_times_sec": [
+    0.0519,
+    0.0297,
+    0.0452
+  ],
+  "pandas_avg_sec": 0.3924,
+  "polars_avg_sec": 0.0423,
+  "speedup_x": 9.29,
+  "msg": "3회 평균 — Pandas 0.392s vs Polars 0.042s (Polars가 약 9.29배 빠름)"
+}

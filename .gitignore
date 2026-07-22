@@ -5,3 +5,4 @@ __pycache__/
 .venv
 .claude
 .env
+data/adult_x25.csv
