@@ -5,6 +5,11 @@ from src.stats import run_ttest, run_chi2, run_anova
 from src.stats import plot_ttest_result, plot_chi2_result, plot_anova_result
 from src.stats import compare_all_models
 
+from src.eda import load_and_clean_data
+from src.eda import create_plotly_chart, create_seaborn_chart
+from src.eda import create_cramers_v_plotly_chart, create_cramers_v_seaborn_chart
+from src.eda import build_cramers_v_matrix
+
 from dotenv import load_dotenv
 import os
 from pathlib import Path
@@ -14,23 +19,50 @@ load_dotenv(".env.stats")
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / os.getenv("DATA_DIR", "data")
 DATA_PATH = DATA_DIR / os.getenv("DATA_FILE", "adult.csv")
+MODEL_DIR = BASE_DIR / os.getenv("MODEL_DIR", "model")
+
+# Outputs
+OUTPUT_DIR = BASE_DIR / os.getenv("OUTPUT_DIR")
+EDA_FIGURE_DIR = BASE_DIR / os.getenv("EDA_FIGURE_DIR")
 CDA_FIGURE_DIR = BASE_DIR / os.getenv("CDA_FIGURE_DIR", "figure")
 CDA_FIGURE_DIR.mkdir(parents=True, exist_ok=True)
-MODEL_DIR = BASE_DIR / os.getenv("MODEL_DIR", "model")
+
+# EDA
+SEABORN_OUTPUT = BASE_DIR / os.getenv("SEABORN_OUTPUT")
+PLOTLY_OUTPUT = BASE_DIR / os.getenv("PLOTLY_OUTPUT")
+CRAMERS_V_PNG = BASE_DIR / os.getenv("CRAMERS_V_PNG")
+CRAMERS_V_HTML = BASE_DIR / os.getenv("CRAMERS_V_HTML")
+
+COLUMNS = os.getenv("COLUMNS", "").split(",")
+CATEGORICAL_FEATURES = os.getenv("CATEGORICAL_FEATURES", "").split(",")
 
 
 def main():
     set_korean_font()
     
     # 1. 데이터 로드 및 전처리
-    df = temp()
+    df = load_and_clean_data(DATA_PATH)
     df_preprocess, report_preprocess = preprocessing(df)
     print("=== 타겟 변수(income) 분포 ===")
     print(df_preprocess.income.value_counts())
     print("-" * 50)
 
     alpha = 0.05
+    
+    # 1-2 EDA    
+    create_seaborn_chart(df, SEABORN_OUTPUT)
+    create_plotly_chart(df, PLOTLY_OUTPUT)
 
+    cramers_matrix = build_cramers_v_matrix(df, CATEGORICAL_FEATURES)
+    create_cramers_v_seaborn_chart(cramers_matrix, CRAMERS_V_PNG)
+    create_cramers_v_plotly_chart(cramers_matrix, CRAMERS_V_HTML)
+
+    print(f"Seaborn 차트 저장 완료: {SEABORN_OUTPUT}")
+    print(f"Plotly 차트 저장 완료: {PLOTLY_OUTPUT}")
+    print(f"범주형 연관성 이미지 저장 완료: {CRAMERS_V_PNG}")
+    print(f"범주형 연관성 HTML 저장 완료: {CRAMERS_V_HTML}")
+
+    
     # ========================================================================== #
     # 2. 다중 컬럼 조합에 대한 반복문(for) 기반 통계 검정 및 개별 시각화 저장
     # ========================================================================== #
